@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 public class Scripture
 {
+    public Reference Reference { get; private set; }
     public string Text { get; private set; }
     private List<Word> Words;
     public bool IsFullyHidden => Words.TrueForAll(w => w.IsHidden);
 
-    public Scripture(string reference, string text)
+    public Scripture(Reference reference, string text)
     {
-        Text = reference + ": " + text;
+        Reference = reference;
+        Text = text;
         Words = new List<Word>();
-        foreach (var word in text.Split(' '))
+        foreach (var word in (Reference.ToString() + ": " + text).Split(' '))
         {
             Words.Add(new Word(word));
         }
@@ -19,10 +21,12 @@ public class Scripture
 
     public void Display()
     {
+        Console.Write(Reference + ": ");
         foreach (var word in Words)
         {
             Console.Write(word + " ");
         }
+        Console.WriteLine();
     }
 
     public void HideWords()
